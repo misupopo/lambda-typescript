@@ -132,3 +132,4 @@ jobs:
           make sync-deploy bucketName="${{ env.BUCKET_NAME }}" yamlPath="../lambda.yaml"
 
 
+
