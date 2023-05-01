@@ -7,10 +7,23 @@ templateFile = $(stackTemplatePath)/$(targetStackTemplate).yaml
 profile = $(Profile)
 # リージョン
 region = $(Region)
+# スタック名
+stackName= $(StackName)
+# yamlのpath
+yamlPath = $(shell pwd)
+# S3のbucket名
+bucketName = $(BucketName)
 
 # makeコマンドの引数をテストしたいとき
 test:
 	echo $(name)-$(shell date +%s)
+
+test-arg:
+	@echo $(profile)
+	@echo $(region)
+	@echo $(stackName)
+	@echo $(yamlPath)
+	@echo $(bucketName)
 
 directory = ./s3
 
