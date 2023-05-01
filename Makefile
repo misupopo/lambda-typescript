@@ -25,6 +25,12 @@ test-arg:
 	@echo $(yamlPath)
 	@echo $(bucketName)
 
+add-submodule:
+	git submodule add git@github.com:misupopo/cloudformation-example.git cloudformation-example
+
+clone-submodule:
+	git clone git@github.com:misupopo/cloudformation-example.git --recurse-submodules
+
 directory = ./s3
 
 # localのs3フォルダーの存在確認
