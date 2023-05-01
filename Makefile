@@ -1,3 +1,13 @@
+# .envファイルを読み込み
+# include の変数セットが難しいので上の階層を
+include .env
+templateFile = $(stackTemplatePath)/$(targetStackTemplate).yaml
+
+# プロファイル
+profile = $(Profile)
+# リージョン
+region = $(Region)
+
 # makeコマンドの引数をテストしたいとき
 test:
 	echo $(name)-$(shell date +%s)
@@ -76,7 +86,9 @@ create-package-yaml:
 	sam package \
 		--template-file template.yaml \
 		--s3-bucket $(bucketName) \
-		--output-template-file output.yaml
+		--output-template-file output.yaml \
+		--profile $(profile) \
+		--region $(region)
 
 ####### deploy #######
 # スタックを作成するときに実行するコマンド
@@ -87,7 +99,9 @@ sam-deploy-package:
 	sam deploy \
 		--template-file output.yaml \
 		--stack-name $(stackName) \
-		--capabilities CAPABILITY_IAM
+		--capabilities CAPABILITY_IAM \
+		--profile $(profile) \
+		--region $(region)
 
 # s3のpathを参照したtemplateのyamlを基にcloudformationコマンド経由でdeployを行う
 # make deploy-package stackName=""
@@ -95,7 +109,9 @@ deploy-package:
 	aws cloudformation deploy \
 		--stack-name $(stackName)-lambda \
 		--template-file output.yaml \
-		--capabilities CAPABILITY_IAM
+		--capabilities CAPABILITY_IAM \
+		--profile $(profile) \
+		--region $(region)
 
 ####### update #######
 # すでにスタックがあってバージョン情報などを更新する時
@@ -107,14 +123,18 @@ update-package:
 		--stack-name $(stackName)-lambda \
 		--template-body file://output.yaml \
 		--change-set-name $(changeSetName) \
-		--capabilities CAPABILITY_IAM
+		--capabilities CAPABILITY_IAM \
+		--profile $(profile) \
+		--region $(region)
 
 # スタックを更新するための実行コマンド
 # 事前に同じchangeSetNameをupdate-packageで行なってからexecute-update-packageを実行することができる
 execute-update-package:
 	aws cloudformation execute-change-set \
 		--stack-name $(stackName)-lambda \
-		--change-set-name $(changeSetName)
+		--change-set-name $(changeSetName) \
+		--profile $(profile) \
+		--region $(region)
 
 # cloudのs3にアップロードする事前準備
 # version情報を切るようにlocalのs3にsam buildした成果物を配置する
