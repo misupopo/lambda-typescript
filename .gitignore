@@ -6,3 +6,4 @@ localDynamodbData
 dist
 s3/**
 localstackData
+.env
