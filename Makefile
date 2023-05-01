@@ -10,7 +10,7 @@ region = $(Region)
 # スタック名
 stackName= $(StackName)
 # yamlのpath
-yamlPath = $(shell pwd)
+yamlPath = $(shell pwd)/cloudformation-example/lambda.yaml
 # S3のbucket名
 bucketName = $(BucketName)
 
@@ -81,7 +81,7 @@ list-bucket:
 # 末尾をtimestampにしているのはdirectory名が被って作成できない時があるため
 # 例； example-lambda-${currentTimeStamp}
 create-bucket:
-	aws s3 mb s3://$(name)-$(shell date +%s)
+	aws s3 mb s3://$(name)-$(shell date +%s) --profile $(profile) --region $(region)
 
 # localのs3フォルダーにs3にアップするためのcompileされたlambdaコードを配置する
 sync-local:
@@ -90,7 +90,7 @@ sync-local:
 # localのs3が空だからといってcloudのs3のbucketが空になることはない
 sync-bucket:
 	make check-directory
-	aws s3 sync s3 s3://$(bucketName)
+	aws s3 sync s3 s3://$(bucketName) --profile $(profile) --region $(region)
 
 # buildやsync-local、sync-bucketを順番に実行するのが面倒なのでひとまとめにしたコマンド
 # src配下のソースコードをcompileした後に実行する
